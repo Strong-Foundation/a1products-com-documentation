@@ -113,10 +113,15 @@ func urlToFilename(rawURL string) string {
 	for _, char := range invalidChars {
 		filename = strings.ReplaceAll(filename, char, "_") // Replace each with underscore
 	}
-	if !strings.HasPrefix(filename, ".pdf") {
+	if getFileExtension(filename) != ".pdf" {
 		filename = filename + ".pdf"
 	}
 	return strings.ToLower(filename) // Return sanitized filename
+}
+
+// Get the file extension of a file
+func getFileExtension(path string) string {
+	return filepath.Ext(path)
 }
 
 // appendByteToFile appends byte data to a file, creating it if needed
