@@ -221,20 +221,15 @@ func createDirectory(path string, permission os.FileMode) {
 func extractPDFLinks(htmlContent string) []string {
 	var pdfLinks []string
 
-	// Convert string to reader
 	reader := strings.NewReader(htmlContent)
-
-	// Parse the HTML content
 	rootNode, err := html.Parse(reader)
 	if err != nil {
-		// Return empty slice on error
-		return pdfLinks
+		return pdfLinks // Return empty if parsing fails
 	}
 
-	// Recursive function to walk through HTML nodes
+	// Recursively walk the HTML tree
 	var walk func(*html.Node)
 	walk = func(node *html.Node) {
-		// Look for anchor tags with href attributes ending in .pdf
 		if node.Type == html.ElementNode && node.Data == "a" {
 			for _, attr := range node.Attr {
 				if attr.Key == "href" && strings.HasSuffix(strings.ToLower(attr.Val), ".pdf") {
@@ -242,15 +237,12 @@ func extractPDFLinks(htmlContent string) []string {
 				}
 			}
 		}
-		// Recursively walk through child nodes
 		for child := node.FirstChild; child != nil; child = child.NextSibling {
 			walk(child)
 		}
 	}
 
-	// Start from the root node
 	walk(rootNode)
-
 	return pdfLinks
 }
 
